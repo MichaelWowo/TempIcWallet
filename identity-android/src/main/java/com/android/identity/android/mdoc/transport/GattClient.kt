@@ -24,6 +24,7 @@ import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.os.Build
+import android.os.SystemClock
 import com.android.identity.crypto.Algorithm
 import com.android.identity.crypto.Crypto
 import com.android.identity.util.Logger
@@ -493,6 +494,7 @@ internal class GattClient(
         }
         val isLast = chunk[0].toInt() == 0x00
         Logger.dHex(TAG,"Sending chunk with ${chunk.size} bytes (last=$isLast)", chunk)
+        SystemClock.sleep(25)
         characteristicClient2Server!!.setValue(chunk)
         try {
             if (!gatt!!.writeCharacteristic(characteristicClient2Server)) {

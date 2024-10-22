@@ -274,7 +274,7 @@ object DrivingLicense {
                 false,
                 MDL_NAMESPACE,
                 Icon.PLACE,
-                SampleData.RESIDENT_ADDRESS.toDataItem()
+                SampleData.VC.toDataItem()
             )
             .addAttribute(
                 DocumentAttributeType.Date,

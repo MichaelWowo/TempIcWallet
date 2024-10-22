@@ -28,6 +28,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -101,6 +103,9 @@ dependencies {
     implementation(libs.cbor)
     implementation(libs.exifinterface)
     implementation(libs.androidx.work)
+
+    implementation(libs.jackson.module.kotlin)
+    implementation(libs.jackson.databind)
 
     implementation(files("../third-party/play-services-identity-credentials-0.0.1-eap01.aar"))
     implementation(libs.bundles.google.play.services)

@@ -3,8 +3,14 @@ package com.android.identity.wallet.util
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Base64
 import com.android.identity.documenttype.DocumentAttributeType
+import com.android.identity.documenttype.knowntypes.CredenceDocument.CREDENCE_NAMESPACE
+import com.android.identity.documenttype.knowntypes.SampleData
 import com.android.identity.wallet.R
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.module.kotlin.readValue
 
 object SampleDataProvider {
     const val MDL_NAMESPACE = "org.iso.18013.5.1"
@@ -72,6 +78,21 @@ object SampleDataProvider {
                 "biometric_template_iris" -> Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
 
                 else -> defaultValue(type)
+            }
+
+            CREDENCE_NAMESPACE -> {
+                val updatedValues = updateFromJsonLd(SampleData.VC)
+                when (identifier) {
+                    "family_name" -> updatedValues["family_name"]
+                    "given_name" -> updatedValues["given_name"]
+                    "birth_date" -> updatedValues["birth_date"]
+                    "issue_date" -> updatedValues["issue_date"]
+                    "expiry_date" -> updatedValues["expiry_date"]
+                    "portrait" -> updatedValues["portrait"]
+                    "document_number" -> updatedValues["document_number"]
+                    "resident_card_json_ld" -> updatedValues["resident_card_json_ld"]
+                    else -> defaultValue(type)
+                }
             }
 
             AAMVA_NAMESPACE -> when (identifier) {
@@ -338,5 +359,42 @@ object SampleDataProvider {
             is DocumentAttributeType.IntegerOptions,
             is DocumentAttributeType.ComplexType -> null
         }
+    }
+
+    // Function to decode a base64 image to Bitmap
+    private fun decodeBase64Image(base64String: String): Bitmap? {
+        return try {
+            val decodedString = Base64.decode(base64String.split(",")[1], Base64.DEFAULT)
+            BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+        } catch (e: IllegalArgumentException) {
+            null
+        }
+    }
+
+    // Function to map values from JSON-LD to CREDENCE_NAMESPACE
+    fun updateFromJsonLd(jsonLdString: String): Map<String, Any?>{
+        val jsonLdMap = JsonUtil.decodeJsonLd(jsonLdString)
+
+        // Deserialize the JSON into a mutable ObjectNode (to allow modification)
+        val rootNode: ObjectNode = ObjectMapper().readValue(jsonLdString)
+
+        // Remove both image fields
+        val subjectNode = rootNode.get("credentialSubject") as ObjectNode
+
+        val subjectImage = subjectNode.remove("image")?.asText()
+
+        // Get the modified JSON as a string without the image fields
+        val jsonWithoutImages =  ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(rootNode)
+
+        return mapOf(
+            "family_name" to (jsonLdMap["credentialSubject"] as? Map<*, *>)?.get("familyName"),
+            "given_name" to (jsonLdMap["credentialSubject"] as? Map<*, *>)?.get("givenName"),
+            "birth_date" to (jsonLdMap["credentialSubject"] as? Map<*, *>)?.get("birthDate"),
+            "issue_date" to jsonLdMap["issuanceDate"],
+            "expiry_date" to jsonLdMap["expirationDate"],
+            "document_number" to (jsonLdMap["credentialSubject"] as? Map<*, *>)?.get("lprNumber"),
+            "portrait" to decodeBase64Image(subjectImage ?: ""),
+            "resident_card_json_ld" to jsonLdString,
+        )
     }
 }
