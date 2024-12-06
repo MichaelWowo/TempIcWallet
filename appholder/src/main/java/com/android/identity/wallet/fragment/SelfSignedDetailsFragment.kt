@@ -223,7 +223,11 @@ class SelfSignedDetailsFragment : Fragment() {
                     getTextView(field.id + 500, field.label)
                 )
                 binding.layoutSelfSignedDetails.addView(
-                    getEditView(field.id, field.value.toString(), null)
+                    if(field.value.toString().length > 200) {
+                        getEditView(field.id, field.value.toString().substring(0, 200) + "...", null)
+                    } else {
+                        getEditView(field.id, field.value.toString(), null)
+                    }
                 )
             }
 

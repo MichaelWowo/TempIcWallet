@@ -26,16 +26,16 @@ import com.android.identity.documenttype.Icon
  * Object containing the metadata of the Driving License
  * Document Type.
  */
-object NatCert {
-    const val NATCERT_DOCTYPE = "org.iso.18013.5.1.natcert"
-    const val NATCERT_NAMESPACE = "org.iso.18013.5.1.natcert"
+object NatCertGoodSigEcdsasdBbs {
+    const val NATCERT_GOOD_ECDSASD_BSS_DOCTYPE = "org.iso.18013.5.1.natcertgoodecdsasdbss"
+    const val NATCERT_GOOD_ECDSASD_BSS_NAMESPACE = "org.iso.18013.5.1.natcertgoodecdsasdbss"
 
     /**
      * Build the Driving License Document Type.
      */
     fun getDocumentType(): DocumentType {
-        return DocumentType.Builder("Certificate of Naturalization (SAMPLE)")
-            .addMdocDocumentType(NATCERT_DOCTYPE)
+        return DocumentType.Builder("Certificate of Naturalization (Good Ecdsasd Bss)")
+            .addMdocDocumentType(NATCERT_GOOD_ECDSASD_BSS_DOCTYPE)
             .addVcDocumentType("Iso18013DriversLicenseCredential")
             /*
              * First the attributes that the mDL and VC Credential Type have in common
@@ -46,7 +46,7 @@ object NatCert {
                 "Family Name",
                 "Last name, surname, or primary identifier, of the mDL holder.",
                 true,
-                NATCERT_NAMESPACE,
+                NATCERT_GOOD_ECDSASD_BSS_NAMESPACE,
                 Icon.PERSON,
                 SampleData.FAMILY_NAME.toDataItem()
             )
@@ -56,7 +56,7 @@ object NatCert {
                 "Given Names",
                 "First name(s), other name(s), or secondary identifier, of the mDL holder",
                 true,
-                NATCERT_NAMESPACE,
+                NATCERT_GOOD_ECDSASD_BSS_NAMESPACE,
                 Icon.PERSON,
                 SampleData.GIVEN_NAME.toDataItem()
             )
@@ -66,7 +66,7 @@ object NatCert {
                 "Date of Birth",
                 "Day, month and year on which the mDL holder was born. If unknown, approximate date of birth",
                 true,
-                NATCERT_NAMESPACE,
+                NATCERT_GOOD_ECDSASD_BSS_NAMESPACE,
                 Icon.TODAY,
                 SampleData.birthDate.toDataItemFullDate()
             )
@@ -76,7 +76,7 @@ object NatCert {
                 "Date of Issue",
                 "Date when mDL was issued",
                 true,
-                NATCERT_NAMESPACE,
+                NATCERT_GOOD_ECDSASD_BSS_NAMESPACE,
                 Icon.CALENDAR_CLOCK,
                 SampleData.issueDate.toDataItemFullDate()
             )
@@ -86,7 +86,7 @@ object NatCert {
                 "Date of Expiry",
                 "Date when mDL expires",
                 true,
-                NATCERT_NAMESPACE,
+                NATCERT_GOOD_ECDSASD_BSS_NAMESPACE,
                 Icon.CALENDAR_CLOCK,
                 SampleData.expiryDate.toDataItemFullDate()
             )
@@ -96,7 +96,7 @@ object NatCert {
                 "License Number",
                 "The number assigned or calculated by the issuing authority.",
                 true,
-                NATCERT_NAMESPACE,
+                NATCERT_GOOD_ECDSASD_BSS_NAMESPACE,
                 Icon.NUMBERS,
                 SampleData.DOCUMENT_NUMBER.toDataItem()
             )
@@ -106,18 +106,18 @@ object NatCert {
                 "Photo of Holder",
                 "A reproduction of the mDL holder’s portrait.",
                 true,
-                NATCERT_NAMESPACE,
+                NATCERT_GOOD_ECDSASD_BSS_NAMESPACE,
                 null
             )
             .addAttribute(
                 DocumentAttributeType.String,
                 "certificate_of_naturalization_json_ld",
                 "Certificate of Naturalization",
-                "Government of Utopia Permanent Resident Card",
+                "Certificate of Naturalization",
                 true,
-                NATCERT_NAMESPACE,
+                NATCERT_GOOD_ECDSASD_BSS_NAMESPACE,
                 Icon.ACCOUNT_BALANCE,
-                SampleData.NATCERT_BAD_SIG_ECDSA.toDataItem()
+                SampleData.NATCERT_GOOD_SIG_ECDSASD_BSS.toDataItem()
             )
             /*
              * Then the attributes that exist only in the mDL Credential Type and not in the VC Credential Type
@@ -130,7 +130,7 @@ object NatCert {
                 DocumentAttributeType.String,
                 "CertificateOfNaturalization",
                 "Certificate of Naturalization",
-                "Certificate of Naturalization (SAMPLE)",
+                "Certificate of Naturalization (Good Ecdsa Bss)",
                 Icon.ACCOUNT_BALANCE,
                 "test".toDataItem()
             )

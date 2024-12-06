@@ -6,7 +6,11 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import com.android.identity.documenttype.DocumentAttributeType
 import com.android.identity.documenttype.knowntypes.CredenceDocument.CREDENCE_NAMESPACE
-import com.android.identity.documenttype.knowntypes.NatCert.NATCERT_NAMESPACE
+import com.android.identity.documenttype.knowntypes.NatCertBadSigEcdsa.NATCERT_BAD_ECDSA_NAMESPACE
+import com.android.identity.documenttype.knowntypes.NatCertGoodSigEcdsa.NATCERT_GOOD_ECDSA_NAMESPACE
+import com.android.identity.documenttype.knowntypes.NatCertGoodSigEcdsaBss.NATCERT_GOOD_ECDSA_BSS_DOCTYPE
+import com.android.identity.documenttype.knowntypes.NatCertGoodSigEcdsasdBbs.NATCERT_GOOD_ECDSASD_BSS_DOCTYPE
+import com.android.identity.documenttype.knowntypes.NatCertRevokedSigEcdsa.NATCERT_REVOKED_ECDSA_NAMESPACE
 import com.android.identity.documenttype.knowntypes.SampleData
 import com.android.identity.wallet.R
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -96,7 +100,7 @@ object SampleDataProvider {
                 }
             }
 
-            NATCERT_NAMESPACE -> {
+            NATCERT_BAD_ECDSA_NAMESPACE -> {
                 val updatedValues = updateFromNatCertJsonLd(SampleData.NATCERT_BAD_SIG_ECDSA)
                 when (identifier) {
                     "family_name" -> updatedValues["family_name"]
@@ -106,7 +110,68 @@ object SampleDataProvider {
                     "expiry_date" -> "NA"
                     "portrait" -> updatedValues["portrait"]
                     "document_number" -> updatedValues["document_number"]
-                    "resident_card_json_ld" -> updatedValues["resident_card_json_ld"]
+                    "certificate_of_naturalization_json_ld" -> updatedValues["certificate_of_naturalization_json_ld"]
+                    else -> defaultValue(type)
+                }
+            }
+
+            NATCERT_GOOD_ECDSA_NAMESPACE -> {
+                val updatedValues = updateFromNatCertJsonLd(SampleData.NAT_CERT_GOOD_SIG_ECDSA)
+                when (identifier) {
+                    "family_name" -> updatedValues["family_name"]
+                    "given_name" -> updatedValues["given_name"]
+                    "birth_date" -> updatedValues["birth_date"]
+                    "issue_date" -> updatedValues["issue_date"]
+                    "expiry_date" -> "NA"
+                    "portrait" -> updatedValues["portrait"]
+                    "document_number" -> updatedValues["document_number"]
+                    "certificate_of_naturalization_json_ld" -> updatedValues["certificate_of_naturalization_json_ld"]
+                    else -> defaultValue(type)
+                }
+            }
+
+
+            NATCERT_REVOKED_ECDSA_NAMESPACE -> {
+                val updatedValues = updateFromNatCertJsonLd(SampleData.NAT_CERT_REVOKED_SIG_ECDSA)
+                when (identifier) {
+                    "family_name" -> updatedValues["family_name"]
+                    "given_name" -> updatedValues["given_name"]
+                    "birth_date" -> updatedValues["birth_date"]
+                    "issue_date" -> updatedValues["issue_date"]
+                    "expiry_date" -> "NA"
+                    "portrait" -> updatedValues["portrait"]
+                    "document_number" -> updatedValues["document_number"]
+                    "certificate_of_naturalization_json_ld" -> updatedValues["certificate_of_naturalization_json_ld"]
+                    else -> defaultValue(type)
+                }
+            }
+
+            NATCERT_GOOD_ECDSA_BSS_DOCTYPE -> {
+                val updatedValues = updateFromNatCertJsonLd(SampleData.NATCERT_GOOD_SIG_ECDSA_BSS)
+                when (identifier) {
+                    "family_name" -> updatedValues["family_name"]
+                    "given_name" -> updatedValues["given_name"]
+                    "birth_date" -> updatedValues["birth_date"]
+                    "issue_date" -> updatedValues["issue_date"]
+                    "expiry_date" -> "NA"
+                    "portrait" -> updatedValues["portrait"]
+                    "document_number" -> updatedValues["document_number"]
+                    "certificate_of_naturalization_json_ld" -> updatedValues["certificate_of_naturalization_json_ld"]
+                    else -> defaultValue(type)
+                }
+            }
+
+            NATCERT_GOOD_ECDSASD_BSS_DOCTYPE -> {
+                val updatedValues = updateFromNatCertJsonLd(SampleData.NATCERT_GOOD_SIG_ECDSASD_BSS)
+                when (identifier) {
+                    "family_name" -> updatedValues["family_name"]
+                    "given_name" -> updatedValues["given_name"]
+                    "birth_date" -> updatedValues["birth_date"]
+                    "issue_date" -> updatedValues["issue_date"]
+                    "expiry_date" -> "NA"
+                    "portrait" -> updatedValues["portrait"]
+                    "document_number" -> updatedValues["document_number"]
+                    "certificate_of_naturalization_json_ld" -> updatedValues["certificate_of_naturalization_json_ld"]
                     else -> defaultValue(type)
                 }
             }
@@ -435,7 +500,7 @@ object SampleDataProvider {
             "issue_date" to jsonLdMap["validFrom"],
             "document_number" to (jsonLdMap["certificateOfNaturalization"] as? Map<*, *>)?.get("insRegistrationNumber"),
             "portrait" to decodeBase64Image(subjectImage ?: ""),
-            "resident_card_json_ld" to jsonLdString,
+            "certificate_of_naturalization_json_ld" to jsonLdString,
         )
     }
 }
