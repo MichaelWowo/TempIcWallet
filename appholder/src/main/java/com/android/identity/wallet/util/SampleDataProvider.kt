@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import com.android.identity.documenttype.DocumentAttributeType
 import com.android.identity.documenttype.knowntypes.CredenceDocument.CREDENCE_NAMESPACE
+import com.android.identity.documenttype.knowntypes.NatCert.NATCERT_NAMESPACE
 import com.android.identity.documenttype.knowntypes.SampleData
 import com.android.identity.wallet.R
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -88,6 +89,21 @@ object SampleDataProvider {
                     "birth_date" -> updatedValues["birth_date"]
                     "issue_date" -> updatedValues["issue_date"]
                     "expiry_date" -> updatedValues["expiry_date"]
+                    "portrait" -> updatedValues["portrait"]
+                    "document_number" -> updatedValues["document_number"]
+                    "resident_card_json_ld" -> updatedValues["resident_card_json_ld"]
+                    else -> defaultValue(type)
+                }
+            }
+
+            NATCERT_NAMESPACE -> {
+                val updatedValues = updateFromNatCertJsonLd(SampleData.NATCERT_BAD_SIG_ECDSA)
+                when (identifier) {
+                    "family_name" -> updatedValues["family_name"]
+                    "given_name" -> updatedValues["given_name"]
+                    "birth_date" -> updatedValues["birth_date"]
+                    "issue_date" -> updatedValues["issue_date"]
+                    "expiry_date" -> "NA"
                     "portrait" -> updatedValues["portrait"]
                     "document_number" -> updatedValues["document_number"]
                     "resident_card_json_ld" -> updatedValues["resident_card_json_ld"]
@@ -393,6 +409,31 @@ object SampleDataProvider {
             "issue_date" to jsonLdMap["issuanceDate"],
             "expiry_date" to jsonLdMap["expirationDate"],
             "document_number" to (jsonLdMap["credentialSubject"] as? Map<*, *>)?.get("lprNumber"),
+            "portrait" to decodeBase64Image(subjectImage ?: ""),
+            "resident_card_json_ld" to jsonLdString,
+        )
+    }
+
+    fun updateFromNatCertJsonLd(jsonLdString: String): Map<String, Any?>{
+        val jsonLdMap = JsonUtil.decodeJsonLd(jsonLdString)
+
+        // Deserialize the JSON into a mutable ObjectNode (to allow modification)
+        val rootNode: ObjectNode = ObjectMapper().readValue(jsonLdString)
+
+        // Remove both image fields
+        val subjectNode = rootNode.get("credentialSubject") as ObjectNode
+
+        val subjectImage = subjectNode.remove("image")?.asText()
+
+        // Get the modified JSON as a string without the image fields
+        val jsonWithoutImages =  ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(rootNode)
+
+        return mapOf(
+            "family_name" to (jsonLdMap["credentialSubject"] as? Map<*, *>)?.get("familyName"),
+            "given_name" to (jsonLdMap["credentialSubject"] as? Map<*, *>)?.get("givenName"),
+            "birth_date" to (jsonLdMap["credentialSubject"] as? Map<*, *>)?.get("birthDate"),
+            "issue_date" to jsonLdMap["validFrom"],
+            "document_number" to (jsonLdMap["certificateOfNaturalization"] as? Map<*, *>)?.get("insRegistrationNumber"),
             "portrait" to decodeBase64Image(subjectImage ?: ""),
             "resident_card_json_ld" to jsonLdString,
         )

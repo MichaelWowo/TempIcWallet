@@ -15,6 +15,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.InputType
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -102,6 +103,7 @@ class SelfSignedDetailsFragment : Fragment() {
         )
         documentNameEditText = binding.layoutSelfSignedDetails.findViewById(0)
         vm.getFields(provisionInfo.docType).forEach { field ->
+            Log.d("CID", "Field: $field")
             addField(field)
             if (field.name in nameElements) {
                 holderNameEditText = binding.layoutSelfSignedDetails.findViewById(field.id)
