@@ -14,6 +14,7 @@ java {
 }
 
 dependencies {
+    implementation(libs.identity.jvm)
     ksp(project(":processor"))
     implementation(project(":processor-annotations"))
     implementation(project(":identity"))

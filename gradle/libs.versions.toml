@@ -62,6 +62,7 @@ qrose = "1.0.1"
 easyqrscan = "0.2.0"
 jackson-databind = "2.13.3"
 jackson-module-kotlin = "2.18.0"
+identityJvm = "202411.1"
 
 [libraries]
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson-databind" }
@@ -134,6 +135,7 @@ jetbrains-navigation-runtime = { module = "org.jetbrains.androidx.navigation:nav
 camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraLifecycle" }
 qrose = { group = "io.github.alexzhirkevich", name = "qrose", version.ref="qrose"}
 easyqrscan = { module = "io.github.kalinjul.easyqrscan:scanner", version.ref = "easyqrscan" }
+identity-jvm = { group = "com.android.identity", name = "identity-jvm", version.ref = "identityJvm" }
 
 [bundles]
 google-play-services = ["play-services-base", "play-services-basement", "play-services-tasks"]
